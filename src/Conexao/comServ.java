@@ -45,7 +45,7 @@ public class comServ extends Thread {
         try {
             ServerSocket s = new ServerSocket(2222);
             while (true) {
-                System.out.println("Esperando alguem se conectar...");
+                System.out.println("Esperando alguem se conectar....");
                 try {
                     Socket conexao = s.accept();
                     System.out.println(" Conectou!");

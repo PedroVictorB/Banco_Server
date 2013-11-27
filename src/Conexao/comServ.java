@@ -39,6 +39,7 @@ public class comServ extends Thread {
         this.socket = socket;
     }
 
+
     public static void main(String args[]) {
 
         try {
@@ -47,8 +48,6 @@ public class comServ extends Thread {
                 System.out.println("Esperando alguem se conectar...");
                 try {
                     Socket conexao = s.accept();
-                    teste.add(s.getInetAddress().getHostName());
-                    PrintStream ps = new PrintStream(conexao.getOutputStream());
                     System.out.println(" Conectou!");
                     Thread t = new comServ(conexao);
                     t.start();
@@ -65,18 +64,7 @@ public class comServ extends Thread {
     public void run() {
         try {
             BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintStream saida = new PrintStream(socket.getOutputStream());
-            nome = entrada.readLine();
-            if (nome == null) {
-                return;
-            }
-            clientes.add(saida);
-            String linha = entrada.readLine();
-            while (linha != null && !(linha.trim().equals(""))) {
-                linha = entrada.readLine();
-                System.out.println(linha);
-            }
-            clientes.remove(saida);
+            System.out.println(entrada.readLine());
             socket.close();
         } catch (IOException e) {
             System.out.println("IOException: " + e);

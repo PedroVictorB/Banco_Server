@@ -19,7 +19,7 @@ public class Iniciar_BD {
     public Iniciar_BD(){
         this.connection = new conBD().getConnection();
         // lembrar de ter um banco de dados com o nome "banco"
-        String sql = "create table clientes(conta BIGINT NOT NULL AUTO_INCREMENT,total BIGINT,primary key (cliente));";
+        String sql = "create table clientes(conta INT NOT NULL AUTO_INCREMENT,saldo INT,primary key (conta));";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.execute();

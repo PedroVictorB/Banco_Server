@@ -4,22 +4,13 @@
  */
 package Conexao;
 
+import DAO.comandos_SQL;
+import Entidades.Clientes;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -27,14 +18,9 @@ import java.util.logging.Logger;
  */
 public class comServ extends Thread {
 
-    private ServerSocket server;
     private Socket socket;
-    private InputStream entrada;
-    private BufferedReader read;
-    private String nome;
-    private List clientes = new ArrayList();
-    private static List teste = new ArrayList();
-
+    String[] vetor_de_comando;
+    
     public comServ(Socket socket) {
         this.socket = socket;
     }
@@ -62,9 +48,38 @@ public class comServ extends Thread {
 
     @Override
     public void run() {
+        //String Depositar: "1" + " " + conta + " " + valor
+        //String Transferir: "2" + " " + conta + " "  + conta para transferir + " " + valor
+        //String Sacar: "3" + " " + conta + " "  + valor
+        //String Consultar: "4" + "" + conta
+        //USAR O DAO PARA MEXER NO BANCO DE DADOS(OBRIGATÓRIO!).
+        
+        vetor_de_comando = new String[4];
+        
         try {
             BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            System.out.println(entrada.readLine());
+            vetor_de_comando = entrada.readLine().split(" ");
+            if(Integer.parseInt(vetor_de_comando[1]) == 1){
+                Clientes c = new Clientes();
+                c.setConta(Integer.parseInt(vetor_de_comando[2]));
+                comandos_SQL sql = new comandos_SQL();
+                sql.depositar(c, Integer.parseInt(vetor_de_comando[3]));
+                
+            }else if(Integer.parseInt(vetor_de_comando[1]) == 2){
+                Clientes c = new Clientes();
+                c.setConta(Integer.parseInt(vetor_de_comando[2]));
+                
+            }else if(Integer.parseInt(vetor_de_comando[1]) == 3){
+                Clientes c = new Clientes();
+                c.setConta(Integer.parseInt(vetor_de_comando[2]));
+                
+            }else if(Integer.parseInt(vetor_de_comando[1]) == 4){
+                Clientes c = new Clientes();
+                c.setConta(Integer.parseInt(vetor_de_comando[2]));
+                
+            }else{
+                System.out.println("Entrada com ERRO ---> "+entrada.readLine());
+            }
             socket.close();
         } catch (IOException e) {
             System.out.println("IOException: " + e);

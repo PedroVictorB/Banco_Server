@@ -4,7 +4,6 @@
  */
 package testes;
 
-import Conexao.comServ;
 
 /**
  *
@@ -12,5 +11,6 @@ import Conexao.comServ;
  */
 public class teste1 {
     public static void main(String args[]){
+        Iniciar_BD i = new Iniciar_BD();
     }
 }

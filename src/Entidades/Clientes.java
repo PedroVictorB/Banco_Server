@@ -5,7 +5,6 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,38 +26,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Clientes.findAll", query = "SELECT c FROM Clientes c"),
     @NamedQuery(name = "Clientes.findByConta", query = "SELECT c FROM Clientes c WHERE c.conta = :conta"),
-    @NamedQuery(name = "Clientes.findByTotal", query = "SELECT c FROM Clientes c WHERE c.total = :total")})
+    @NamedQuery(name = "Clientes.findBySaldo", query = "SELECT c FROM Clientes c WHERE c.saldo = :saldo")})
 public class Clientes implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "conta")
-    private Long conta;
-    @Column(name = "total")
-    private BigInteger total;
+    private Integer conta;
+    @Column(name = "saldo")
+    private Integer saldo;
 
     public Clientes() {
     }
 
-    public Clientes(Long conta) {
+    public Clientes(Integer conta) {
         this.conta = conta;
     }
 
-    public Long getConta() {
+    public Integer getConta() {
         return conta;
     }
 
-    public void setConta(Long conta) {
+    public void setConta(Integer conta) {
         this.conta = conta;
     }
 
-    public BigInteger getTotal() {
-        return total;
+    public Integer getSaldo() {
+        return saldo;
     }
 
-    public void setTotal(BigInteger total) {
-        this.total = total;
+    public void setSaldo(Integer saldo) {
+        this.saldo = saldo;
     }
 
     @Override

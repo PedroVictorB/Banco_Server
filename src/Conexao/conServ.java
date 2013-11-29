@@ -16,12 +16,12 @@ import java.net.Socket;
  *
  * @author Pedro
  */
-public class comServ extends Thread {
+public class conServ extends Thread {
 
     private Socket socket;
     String[] vetor_de_comando;
     
-    public comServ(Socket socket) {
+    public conServ(Socket socket) {
         this.socket = socket;
     }
 
@@ -35,7 +35,7 @@ public class comServ extends Thread {
                 try {
                     Socket conexao = s.accept();
                     System.out.println(" Conectou!");
-                    Thread t = new comServ(conexao);
+                    Thread t = new conServ(conexao);
                     t.start();
                 } catch (IOException e) {
                     System.out.println("IOException: " + e);

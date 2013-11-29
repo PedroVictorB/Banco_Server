@@ -10,51 +10,71 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Pedro
  */
 public class comandos_SQL {
+
     public Connection connection;
-    public comandos_SQL(){
+
+    public comandos_SQL() {
         this.connection = new conBD().getConnection();
     }
-    
-    public void depositar(Clientes c, int valor){
-        
+
+    public void depositar(Clientes c, int valor) {
+
         String sql = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";
         String sql2 = "SELECT saldo FROM clientes WHERE conta = ?";
+        PreparedStatement stmt, stmt2;
+        ResultSet rs;
         
         try {
-            PreparedStatement stmt2 = connection.prepareStatement(sql2);
-            ResultSet rs = stmt2.executeQuery();
-            c.setSaldo((int)rs.getObject("saldo"));
-            
-            int total  = (int)rs.getObject("saldo") - valor;
-            if(total >= 0){
-                c.setSaldo(total);
-                PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt2 = connection.prepareStatement(sql2);
+            rs = stmt2.executeQuery();
+
+            int total = (int) rs.getObject("saldo") - valor;
+            if (total >= 0) {
+                stmt = connection.prepareStatement(sql);
                 stmt.setInt(1, total);
                 stmt.setInt(2, c.getConta());
-            }else{
+                stmt.execute();
+                stmt.close();
+                stmt2.close();
+            } else {
                 System.out.println("Saldo Insuficiente");
+                stmt2.close();
             }
-            
+
         } catch (SQLException u) {
             throw new RuntimeException(u);
         }
     }
-    
-    public void sacar(){
-        
+
+    public void sacar() {
     }
-    
-    public void transferir(){
-        
+
+    public void transferir() {
     }
-    
-    public void consultar(){
+
+    public int consultar(Clientes c) {
         
+        String sql = "SELECT saldo FROM clientes WHERE conta = ?";
+        PreparedStatement stmt;
+        ResultSet rs;
+        
+        try {
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, c.getConta());
+            rs = stmt.executeQuery();
+            stmt.close();
+            return (int)rs.getObject("saldo");
+        } catch (SQLException ex) {
+            Logger.getLogger(comandos_SQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
     }
 }

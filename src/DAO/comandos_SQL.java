@@ -80,8 +80,7 @@ public class comandos_SQL {
     }
 
     public void transferir(Clientes c, int valor, int conta) {
-        String sql = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";//conta atual
-        String sql3 = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";//conta a ser transferida
+        String sql = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";
         String sql2 = "SELECT saldo FROM clientes WHERE conta = ?";
         
         PreparedStatement stmt, stmt2, stmt3;

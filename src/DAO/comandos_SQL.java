@@ -31,9 +31,35 @@ public class comandos_SQL {
         String sql2 = "SELECT saldo FROM clientes WHERE conta = ?";
         PreparedStatement stmt, stmt2;
         ResultSet rs;
-        
+
         try {
             stmt2 = connection.prepareStatement(sql2);
+            stmt2.setInt(1, c.getConta());
+            rs = stmt2.executeQuery();
+
+            int total = (int) rs.getObject("saldo") + valor;
+
+            stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, total);
+            stmt.setInt(2, c.getConta());
+            stmt.execute();
+            stmt.close();
+            stmt2.close();
+
+        } catch (SQLException u) {
+            throw new RuntimeException(u);
+        }
+    }
+
+    public void sacar(Clientes c, int valor) {
+        String sql = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";
+        String sql2 = "SELECT saldo FROM clientes WHERE conta = ?";
+        PreparedStatement stmt, stmt2;
+        ResultSet rs;
+
+        try {
+            stmt2 = connection.prepareStatement(sql2);
+            stmt2.setInt(1, c.getConta());
             rs = stmt2.executeQuery();
 
             int total = (int) rs.getObject("saldo") - valor;
@@ -48,30 +74,63 @@ public class comandos_SQL {
                 System.out.println("Saldo Insuficiente");
                 stmt2.close();
             }
-
         } catch (SQLException u) {
             throw new RuntimeException(u);
         }
     }
 
-    public void sacar() {
-    }
+    public void transferir(Clientes c, int valor, int conta) {
+        String sql = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";//conta atual
+        String sql3 = "UPDATE  `banco`.`clientes` SET  `saldo` =  ? WHERE  `clientes`.`conta` =?;";//conta a ser transferida
+        String sql2 = "SELECT saldo FROM clientes WHERE conta = ?";
+        
+        PreparedStatement stmt, stmt2, stmt3;
+        ResultSet rs;
 
-    public void transferir() {
+        try {
+            stmt2 = connection.prepareStatement(sql2);
+            stmt2.setInt(1, c.getConta());
+            rs = stmt2.executeQuery();
+            
+
+            int total1 = (int) rs.getObject("saldo") - valor;
+            int total2 = (int) rs.getObject("saldo") + valor;
+            
+            if (total1 >= 0) {
+                stmt = connection.prepareStatement(sql);
+                stmt.setInt(1, total1);
+                stmt.setInt(2, c.getConta());
+                stmt.execute();
+                stmt.close();
+                
+                stmt3 = connection.prepareStatement(sql);
+                stmt3.setInt(1, total2);
+                stmt3.setInt(2, conta);
+                stmt3.execute();
+                stmt3.close();
+                
+                stmt2.close();
+            } else {
+                System.out.println("Saldo Insuficiente");
+                stmt2.close();
+            }
+        } catch (SQLException u) {
+            throw new RuntimeException(u);
+        }
     }
 
     public int consultar(Clientes c) {
-        
+
         String sql = "SELECT saldo FROM clientes WHERE conta = ?";
         PreparedStatement stmt;
         ResultSet rs;
-        
+
         try {
             stmt = connection.prepareStatement(sql);
             stmt.setInt(1, c.getConta());
             rs = stmt.executeQuery();
             stmt.close();
-            return (int)rs.getObject("saldo");
+            return (int) rs.getObject("saldo");
         } catch (SQLException ex) {
             Logger.getLogger(comandos_SQL.class.getName()).log(Level.SEVERE, null, ex);
         }
